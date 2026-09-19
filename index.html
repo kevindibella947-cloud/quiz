@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regole per Amministratori</title>
+<style>
+  :root {
+    --bg: #0f1220;
+    --card: #1a1e33;
+    --accent: #6c5ce7;
+    --accent2: #00d2a0;
+    --text: #eef0f6;
+    --muted: #9aa0b4;
+    --wrong: #ff5c72;
+    --correct: #00d2a0;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at top, #1c2140, #0b0d18 70%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+  .wrap { width: 100%; max-width: 640px; }
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .desc { color: var(--muted); margin-bottom: 24px; font-size: 0.95rem; }
+  .progress-bar {
+    height: 8px;
+    background: #262b47;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    width: 0%;
+    transition: width 0.35s ease;
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    border: 1px solid #2a2f52;
+  }
+  .qnum { color: var(--muted); font-size: 0.85rem; margin-bottom: 6px; }
+  .prompt { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; line-height: 1.4; }
+  .option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #22273f;
+    border: 1px solid #333962;
+    color: var(--text);
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 0.98rem;
+    transition: all 0.15s ease;
+  }
+  .option:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #262c4a;
+    transform: translateY(-1px);
+  }
+  .option:disabled { cursor: default; }
+  .option.correct { background: rgba(0,210,160,0.15); border-color: var(--correct); }
+  .option.wrong { background: rgba(255,92,114,0.15); border-color: var(--wrong); }
+  .feedback {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok { background: rgba(0,210,160,0.1); border: 1px solid var(--correct); }
+  .feedback.no { background: rgba(255,92,114,0.1); border: 1px solid var(--wrong); }
+  .verdict { font-weight: 700; display: block; margin-bottom: 4px; }
+  .verdict.ok { color: var(--correct); }
+  .verdict.no { color: var(--wrong); }
+  .nextbtn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    display: none;
+  }
+  .nextbtn.show { display: block; }
+  .result { text-align: center; }
+  .result .score {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin: 8px 0 4px;
+  }
+  .restart {
+    margin-top: 20px;
+    padding: 12px 24px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--text);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+  .restart:hover { background: rgba(108,92,231,0.15); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Regole per Amministratori</h1>
+  <p class="desc">Quiz sulle regole di comportamento corretto per gli amministratori della piattaforma</p>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const QUIZ = {"title": "Regole per Amministratori", "description": "Quiz sulle regole di comportamento corretto per gli amministratori della piattaforma", "questions": [{"prompt": "Un player insulta un amministratore in chat. Cosa deve fare l'amministratore?", "options": {"a": "Insultarlo a sua volta", "b": "Avvisarlo delle regole e, se continua, bannarlo", "c": "Ignorarlo completamente senza intervenire", "d": "Bannarlo subito senza alcun avviso"}, "correct": "b", "explanation": "Un buon amministratore mantiene la calma, avvisa il player della violazione delle regole e applica una sanzione (come il ban) solo se il comportamento persiste."}, {"prompt": "Un amministratore ha un conflitto personale con un player fuori dalla piattaforma. Cosa dovrebbe fare durante il servizio?", "options": {"a": "Usare i suoi poteri da admin per punirlo ingiustamente", "b": "Trattarlo come qualsiasi altro utente, in modo imparziale", "c": "Ignorare tutte le sue segnalazioni per ripicca", "d": "Bannarlo preventivamente"}, "correct": "b", "explanation": "Un amministratore deve sempre essere imparziale: i rapporti personali non devono mai influenzare le decisioni prese nel ruolo di admin."}, {"prompt": "Un player commette una violazione lieve per la prima volta (es. linguaggio leggermente scorretto). Qual è l'approccio corretto?", "options": {"a": "Ban permanente immediato", "b": "Un primo avviso, spiegando quale regola è stata violata", "c": "Nessuna azione, anche se si ripete", "d": "Kick dal server senza spiegazioni"}, "correct": "b", "explanation": "Le sanzioni dovrebbero essere graduali: un primo avviso educativo per errori lievi, poi sanzioni più severe se il comportamento persiste."}, {"prompt": "Un amministratore vuole bannare un player ma non ha prove chiare della violazione. Cosa dovrebbe fare?", "options": {"a": "Bannarlo comunque, tanto è admin", "b": "Raccogliere prove (screenshot, log) prima di agire, o chiedere conferma ad altri admin", "c": "Bannare tutti i player vicini per sicurezza", "d": "Chiedere al player di autoaccusarsi"}, "correct": "b", "explanation": "Le sanzioni devono basarsi su prove concrete. Agire senza prove rischia di punire ingiustamente utenti innocenti."}, {"prompt": "Due amministratori sono in disaccordo su come gestire un caso di moderazione. Qual è il comportamento corretto?", "options": {"a": "Litigare pubblicamente davanti agli altri player", "b": "Discuterne in privato o coinvolgere un admin superiore/owner per decidere", "c": "Ognuno prende decisioni opposte ignorando l'altro", "d": "Bannare l'altro amministratore"}, "correct": "b", "explanation": "I disaccordi tra admin vanno risolti privatamente o portati a un livello superiore della gerarchia, mai mostrati pubblicamente."}]};
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+const card = document.getElementById('quizCard');
+const progressFill = document.getElementById('progressFill');
+
+function letterLabel(k) { return k.toUpperCase(); }
+
+function renderQuestion() {
+  answered = false;
+  const q = QUIZ.questions[current];
+  progressFill.style.width = ((current) / QUIZ.questions.length * 100) + '%';
+
+  let optionsHtml = '';
+  for (const [key, text] of Object.entries(q.options)) {
+    optionsHtml += `<button class="option" data-key="${key}">${letterLabel(key)}: ${text}</button>`;
+  }
+
+  card.innerHTML = `
+    <div class="qnum">Domanda ${current + 1} di ${QUIZ.questions.length}</div>
+    <div class="prompt">${q.prompt}</div>
+    <div id="optionsWrap">${optionsHtml}</div>
+    <div class="feedback" id="feedback"></div>
+    <button class="nextbtn" id="nextBtn">Avanti</button>
+  `;
+
+  document.querySelectorAll('.option').forEach(btn => {
+    btn.addEventListener('click', () => selectAnswer(btn.dataset.key));
+  });
+  document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+}
+
+function selectAnswer(key) {
+  if (answered) return;
+  answered = true;
+  const q = QUIZ.questions[current];
+  const isCorrect = key === q.correct;
+  if (isCorrect) score++;
+
+  document.querySelectorAll('.option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.key === q.correct) btn.classList.add('correct');
+    else if (btn.dataset.key === key) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('feedback');
+  fb.classList.add('show', isCorrect ? 'ok' : 'no');
+  fb.innerHTML = `<span class="verdict ${isCorrect ? 'ok' : 'no'}">${isCorrect ? 'Esatto!' : 'Non proprio.'}</span>${q.explanation}`;
+
+  document.getElementById('nextBtn').classList.add('show');
+  document.getElementById('nextBtn').textContent = (current === QUIZ.questions.length - 1) ? 'Vedi risultato' : 'Avanti';
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= QUIZ.questions.length) {
+    renderResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function renderResult() {
+  progressFill.style.width = '100%';
+  const pct = Math.round((score / QUIZ.questions.length) * 100);
+  let msg;
+  if (pct === 100) msg = "Perfetto! Conosci le regole alla perfezione.";
+  else if (pct >= 70) msg = "Ottimo lavoro, sei quasi pronto per moderare!";
+  else if (pct >= 40) msg = "Non male, ma rivedi alcune regole.";
+  else msg = "Ti consigliamo di rileggere il regolamento con calma.";
+
+  card.innerHTML = `
+    <div class="result">
+      <div class="qnum">Risultato finale</div>
+      <div class="score">${score} / ${QUIZ.questions.length}</div>
+      <p>${msg}</p>
+      <button class="restart" id="restartBtn">Riprova il quiz</button>
+    </div>
+  `;
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    current = 0; score = 0;
+    renderQuestion();
+  });
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
